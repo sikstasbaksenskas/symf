@@ -15,7 +15,6 @@ class OrderController extends AbstractController
      */
     public function index()
     {
-        // return new Response('<html><body>Hello</body></html>');
-        return $this->render('orders/index.html.twig');
+        return $this->render('orders/index.html.twig', ['name' => 'Test']);
     }
 }

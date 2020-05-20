@@ -48,7 +48,13 @@
                 <tbody>
                     {% for order in coffe_orders %}
                         <tr>
-                            <td>{{ order.milk }}</td>
+                            <td>
+                                {% if order.milk is same as(true)%}
+                                    With Milk
+                                {% else %}
+                                    Without Milk
+                                {% endif %}
+                            </td>
                             <td>{{ order.getMilkType() }}</td>
                             <td>{{ order.getCupSize() }}</td>
                             <td>{{ order.location }}</td>

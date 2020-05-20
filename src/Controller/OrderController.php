@@ -111,6 +111,11 @@ class OrderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $coffe = $form->getData();
+            //if coffee without milk
+            if ($coffe->getMilk() == false) {
+                $coffe->setMilkType('none');
+            }
+
             $coffe->setDeliverOn(new \DateTime(date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . " +30 minutes"))));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($coffe);

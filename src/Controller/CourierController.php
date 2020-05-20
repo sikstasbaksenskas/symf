@@ -2,16 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Coffe;
-use App\Entity\Flowers;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Strategy\Format;
 
 class CourierController extends AbstractController
 {
+    private $format;
+
+    public function __construct(Format $format)
+    {
+        $this->format = $format;
+    }
+
+
     /**
      * @Route("/courier", name="courier_home")
      */
@@ -38,43 +42,15 @@ class CourierController extends AbstractController
         $f_orders = $conn->prepare($flowers_orders);
         $f_orders->execute();
 
-        // returns an array of orders
+        //returns an array of orders
         $coffe_orders_array = $c_orders->fetchAll();
         $flowers_orders_array = $f_orders->fetchAll();
 
-        //content for json
+        //merged coffe orders and flowers orders
         $all_orders =  array_merge($coffe_orders_array, $flowers_orders_array);
 
-        //content for xml
-        $xml_content = '';
-        foreach ($all_orders as $order) {
-            $xml_content .= '
-            <order>
-                <location>' . $order['location'] . '</location>
-                <deliver>' . $order['deliver'] . '</deliver>
-            </order>';
-        }
-
-        //responses
-        if ($type == 'json') {
-            $myresponse = array(
-                'success' => true,
-                'content' => $all_orders
-            );
-
-            return new JsonResponse($myresponse);
-        }
-        if ($type == 'xml') {
-            $xml = '
-            <mynode>
-                <orders>' . $xml_content . '</orders>
-            </mynode>
-            ';
-
-            $response = new Response($xml);
-            $response->headers->set('Content-Type', 'application/xml; charset=utf-8');
-
-            return $response;
-        }
+        //returns response
+        $response = $this->format->handle($type, $all_orders);
+        return $response;
     }
 }

@@ -25,3 +25,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Strategy\JsonFormat:
+        tags:
+            - { name: strategy }
+ 
+    App\Strategy\XmlFormat:
+        tags:
+            - { name: strategy }

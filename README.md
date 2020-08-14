@@ -1,1 +1,1 @@
-Symfony task with strategy pattern implementation
+Symfony | strategy pattern implementation
